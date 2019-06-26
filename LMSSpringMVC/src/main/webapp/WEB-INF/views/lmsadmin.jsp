@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>
-	This is LMS Administrator's Home Page
+	This is LMS Administrator's Home Page. We have ${sizeofauthors} Authors in our system
 </h1>
 
 <P>  
