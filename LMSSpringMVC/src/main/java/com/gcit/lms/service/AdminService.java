@@ -402,8 +402,11 @@ public class AdminService {
 	}
 
 	@RequestMapping(value = "/readBorrower", method = RequestMethod.GET, produces = "application/json")
-	public List<Borrower> readBorrowers(@RequestParam(value = "cardNo", required = false) Integer cardNo,
-			@RequestParam(value = "borrowerName", required = false) String name) {
+	public List<Borrower> readBorrowers(
+			@RequestParam(value = "cardNo", required = false) Integer cardNo,
+			@RequestParam(value = "borrowerName", required = false) String name
+			) 
+	{
 		try {
 			if (cardNo != null) { // read exact one borrower
 				List<Borrower> bl = new ArrayList<Borrower>();
@@ -418,12 +421,14 @@ public class AdminService {
 				for (Borrower i : borrowers) {
 					i.setBookLoans(bldao.readBookLoansByID("cardNo", i.getCardId()));
 				}
+				return borrowers;
 			} else { // read all name
 				List<Borrower> borrowers = bordao.readAll();
 				// populate book loan
 				for (Borrower i : borrowers) {
 					i.setBookLoans(bldao.readBookLoansByID("cardNo", i.getCardId()));
 				}
+				return borrowers;
 			}
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -496,7 +501,7 @@ public class AdminService {
 	}
 
 	@RequestMapping(value = "/readPublisher", method = RequestMethod.GET, produces = "application/json")
-	public List<Publisher> readPublisher(@RequestParam(value = "publisherId") Integer publisherId) {
+	public List<Publisher> readPublisher(@RequestParam(value = "publisherId",required = false) Integer publisherId) {
 		try {
 			if (publisherId == null) { // read all publisher
 				List<Publisher> publishers = pdao.readAll();
