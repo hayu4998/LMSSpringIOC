@@ -84,9 +84,12 @@ public class LibrarianService {
 
 	// librarian update bookcopie
 	@RequestMapping(value = "/librarianUpdateNoOfCopies", method = RequestMethod.GET)
-	public String librarianUpdateNoOfCopies(@RequestParam(value = "bookId") Integer bookId,
+	public String librarianUpdateNoOfCopies(
+			@RequestParam(value = "bookId") Integer bookId,
 			@RequestParam(value = "branchId") Integer branchId,
-			@RequestParam(value = "noOfCopies") Integer noOfCopies) {
+			@RequestParam(value = "noOfCopies") Integer noOfCopies
+			) 
+	{
 		try {
 			if (bcdao.readBookCopiesByBookIdBranchId(bookId, branchId).size() != 0) { // already exist
 				bcdao.update(bookId, branchId, noOfCopies);
