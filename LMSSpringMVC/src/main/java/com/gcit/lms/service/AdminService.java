@@ -134,14 +134,21 @@ public class AdminService {
 	}
 
 	@RequestMapping(value = "/readGenre", method = RequestMethod.GET, produces = "application/json")
-	public List<Genre> readGenre(@RequestParam(value = "genreName", required = false) String genreName) {
+	public List<Genre> readGenre(
+			@RequestParam(value = "genreName", required = false) String genreName,
+			@RequestParam(value = "genreId", required = false) String genreId
+			) 
+	{
 		List<Genre> genreList = new ArrayList<Genre>();
 		try {
-			if (genreName == null || genreName.length() == 0) {
-				genreList = gdao.readAll();
-			} else {
+			if(genreId != null) { //read by genreId
+				genreList = gdao.readGenreById(genreId);
+			}else if(genreName != null) {// read by name like genreName
 				genreList = gdao.readGenreByNameLike(genreName);
+			}else { // read all
+				genreList = gdao.readAll();
 			}
+			
 			for (Genre g : genreList) {
 				g.setBooks(bdao.readAllBooksByGenreId(g.getGenreId()));
 			}

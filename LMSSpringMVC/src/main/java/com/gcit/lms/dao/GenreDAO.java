@@ -76,4 +76,8 @@ public class GenreDAO extends BaseDAO<Genre> implements ResultSetExtractor<List<
 		return mysqlTemplate.query("select * from tbl_genre where genre_name like ?", new Object[] {genreName}, this);
 	}
 
+	public List<Genre> readGenreById(String genreId) {
+		return mysqlTemplate.query("select * from tble_genre where genre_id = ?", new Object[] {genreId},this);
+	}
+
 }
