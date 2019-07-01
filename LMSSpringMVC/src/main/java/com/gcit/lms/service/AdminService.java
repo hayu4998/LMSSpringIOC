@@ -508,7 +508,7 @@ public class AdminService {
 		}
 		return null;
 	}
-	//testing
+	
 	@RequestMapping(value = "/editLibraryBranch", method = RequestMethod.POST, consumes = "application/json")
 	public String editLibraryBranch(@RequestBody LibraryBranch libraryBranch) {
 		try {
@@ -526,7 +526,7 @@ public class AdminService {
 			return "edition to library branch fail";
 		}
 	}
-
+	//testing
 	@RequestMapping(value = "/readPublisher", method = RequestMethod.GET, produces = "application/json")
 	public List<Publisher> readPublisher(@RequestParam(value = "publisherId",required = false) Integer publisherId) {
 		try {
@@ -548,6 +548,23 @@ public class AdminService {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			return null;
+		}
+	}
+	
+	@RequestMapping(value = "/editPublisher", method = RequestMethod.POST, consumes = "application/json")
+	public String editPublisher(@RequestBody Publisher publisher) {
+		try {
+			if(publisher.getPublisherId() == null) { //add new publisher
+				pdao.add(publisher);
+			}else if(publisher.getPublisherName() == null) { //delete publisher
+				pdao.delete(publisher);
+			}else { //update exist publisher
+				pdao.update(publisher);
+			}
+			return "Edition to publisher successful";
+		}catch(Exception e) {
+			e.printStackTrace();
+			return "Edition to Publisher failed";
 		}
 	}
 }

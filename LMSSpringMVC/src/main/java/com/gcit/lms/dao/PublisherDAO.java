@@ -31,7 +31,7 @@ public class PublisherDAO extends BaseDAO<Publisher> implements ResultSetExtract
 		return key;
 	}
 
-	public void update(Publisher publisher,String field) throws ClassNotFoundException, SQLException {
+	public void update(Publisher publisher) throws ClassNotFoundException, SQLException {
 		mysqlTemplate.update(
 				"update tbl_publisher set publisherName = ?, publisherAddress = ?, publisherPhone = ? where publisherId = ?", 
 				new Object[]{
