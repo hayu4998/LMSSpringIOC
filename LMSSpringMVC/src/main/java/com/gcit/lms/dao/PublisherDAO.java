@@ -65,7 +65,13 @@ public class PublisherDAO extends BaseDAO<Publisher> implements ResultSetExtract
 	}
 	
 	public Publisher readPublisherByBookId(Integer bookId) throws ClassNotFoundException, SQLException {
-		return mysqlTemplate.query("select * from tbl_publisher where publisherId = (select publisherId fron tbl_book where bookId = ?)", new Object[] {bookId}, this).get(0);
+		List<Publisher> pubList = mysqlTemplate.query("select * from tbl_publisher where publisherId = (select pubId from tbl_book where bookId = ?)", new Object[] {bookId}, this);
+		
+		if(pubList.size() == 0) {
+			return null;
+		}else {
+			return pubList.get(0);
+		}
 	}
 	
 	public List<Publisher> extractData(ResultSet rs) throws SQLException {

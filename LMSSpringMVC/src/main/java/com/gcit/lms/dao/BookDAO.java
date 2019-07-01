@@ -21,9 +21,16 @@ public class BookDAO extends BaseDAO<Book> implements ResultSetExtractor<List<Bo
 	public Integer add(Book book) throws ClassNotFoundException, SQLException {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		mysqlTemplate.update(connection -> {
-			PreparedStatement ps = connection.prepareStatement("insert into tbl_book (title) values (?)",Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, book.getTitle());
-			return ps;
+			if(book.getPublisher().getPublisherId() != null) {
+				PreparedStatement ps = connection.prepareStatement("insert into tbl_book (title,pubId) values (?,?)",Statement.RETURN_GENERATED_KEYS);
+				ps.setString(1, book.getTitle());
+				ps.setInt(2, book.getPublisher().getPublisherId());
+				return ps;
+			}else {
+				PreparedStatement ps = connection.prepareStatement("insert into tbl_book (title) values (?)",Statement.RETURN_GENERATED_KEYS);
+				ps.setString(1, book.getTitle());
+				return ps;
+			}
 		}, keyHolder);
 		Number key = keyHolder.getKey();
 		return key.intValue();
@@ -122,7 +129,8 @@ public class BookDAO extends BaseDAO<Book> implements ResultSetExtractor<List<Bo
 	}
 
 	public List<Book> readBookLikeTitle(String title) {
-		return mysqlTemplate.query("select * from tbl_book where title like %?%", new Object[] { title }, this);
+		title = '%'+title+'%';
+		return mysqlTemplate.query("select * from tbl_book where title like ?", new Object[] { title }, this);
 	}
 
 	public List<Book> readBookbyPubId(Integer pubId) {
@@ -141,6 +149,11 @@ public class BookDAO extends BaseDAO<Book> implements ResultSetExtractor<List<Bo
 
 	public List<Book> readBookByBranchId(Integer branchId) {
 		return mysqlTemplate.query("select * from tbl_book where bookId in(select bookId from tbl_book_copies where branchId = ? and dateIn = null)", new Object[] {branchId}, this);
+	}
+
+	public void updateBookPublisher(Integer pubId, Integer bookId) {
+		mysqlTemplate.update("update tbl_book set pubId = ? where bookId = ?", new Object[] {pubId, bookId},this);
+		
 	}
 
 }

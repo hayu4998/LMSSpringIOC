@@ -28,6 +28,7 @@ import com.gcit.lms.entity.LibraryBranch;
 import com.gcit.lms.entity.Publisher;
 
 @RestController
+@Transactional(rollbackFor=Exception.class)
 public class AdminService {
 
 	@Autowired
@@ -165,15 +166,13 @@ public class AdminService {
 	}
 
 	@RequestMapping(value = "/readBook", method = RequestMethod.GET, produces = "application/json")
-	public List<Book> readBook(
-			@RequestParam(value = "bookId", required = false) Integer bookId,
+	public List<Book> readBook(@RequestParam(value = "bookId", required = false) Integer bookId,
 			@RequestParam(value = "title", required = false) String title,
-			@RequestParam(value = "pubId", required = false) Integer pubId) 
-	{
+			@RequestParam(value = "pubId", required = false) Integer pubId) {
 		try {
 			List<Book> books = new ArrayList<Book>();
 			if (bookId != null) { // read book by bookId
-				
+
 				Book book = bdao.readBookByBookId(bookId);
 				book.setAuthors(adao.readAuthorByBookId(bookId));
 				book.setGenres(gdao.readGenreByBookId(bookId));
@@ -182,41 +181,43 @@ public class AdminService {
 				book.setPublisher(pdao.readPublisherByBookId(bookId));
 				books.add(book);
 
-				
 			} else if (title != null) { // read book by title
 
 				books = bdao.readBookLikeTitle(title);
 				for (Book i : books) {
+					bookId = i.getBookId();
 					i.setAuthors(adao.readAuthorByBookId(bookId));
 					i.setGenres(gdao.readGenreByBookId(bookId));
 					i.setBookLoans(bldao.readBookLoansByID("bookId", bookId));
 					i.setBookCopies(bcdao.readBookCopiesByBookId(bookId));
 					i.setPublisher(pdao.readPublisherByBookId(bookId));
 				}
-				
 
-			} else if (pubId != null){ // read book by publisher Id
+			} else if (pubId != null) { // read book by publisher Id
 				books = bdao.readBookbyPubId(pubId);
 				for (Book i : books) {
+					bookId = i.getBookId();
 					i.setAuthors(adao.readAuthorByBookId(bookId));
 					i.setGenres(gdao.readGenreByBookId(bookId));
 					i.setBookLoans(bldao.readBookLoansByID("bookId", bookId));
 					i.setBookCopies(bcdao.readBookCopiesByBookId(bookId));
 					i.setPublisher(pdao.readPublisherByBookId(bookId));
 				}
-			}else {// read all books
+			} else {// read all books
 				books = bdao.readAll();
 				for (Book i : books) {
+					bookId = i.getBookId();
 					i.setAuthors(adao.readAuthorByBookId(bookId));
 					i.setGenres(gdao.readGenreByBookId(bookId));
 					i.setBookLoans(bldao.readBookLoansByID("bookId", bookId));
 					i.setBookCopies(bcdao.readBookCopiesByBookId(bookId));
+
 					i.setPublisher(pdao.readPublisherByBookId(bookId));
 				}
 			}
 			System.out.println("read book operation success");
 			return books;
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Read Book Operation fail");
@@ -229,6 +230,21 @@ public class AdminService {
 	public String editBook(@RequestBody Book book) {
 		try {
 			if (book.getBookId() == null) { // add book
+
+				// update Publisher
+				if(book.getPublisher() != null) {
+					if (book.getPublisher().getPublisherId() == null) {
+						// add new if not exist
+						Publisher publisher = book.getPublisher();
+						publisher.setPublisherId(pdao.add(book.getPublisher()));
+						book.setPublisher(publisher);
+					}
+				}else {
+					Publisher publisher = new Publisher();
+					publisher.setPublisherId(null);
+					book.setPublisher(publisher);
+				}
+
 				// set up id,title,pubId
 				Integer bookId = bdao.add(book);
 
@@ -236,9 +252,9 @@ public class AdminService {
 				if (book.getAuthors() != null) {
 
 					for (Author i : book.getAuthors()) {
-						if (i.getAuthorId() != null) { // update exist ones
+						if (i.getAuthorId() != null) { // add exist ones
 							bdao.addBookAuthors(bookId, i.getAuthorId());
-						} else { // new author
+						} else { // add new author
 							bdao.addBookAuthors(bookId, adao.add(i));
 
 						}
@@ -248,9 +264,9 @@ public class AdminService {
 				if (book.getGenres() != null) {
 
 					for (Genre i : book.getGenres()) {
-						if (i.getGenreId() != null) { // update exist one
+						if (i.getGenreId() != null) { // add exist one
 							bdao.addBookGenres(bookId, i.getGenreId());
-						} else { // new genre
+						} else { // add new genre
 							bdao.addBookGenres(bookId, gdao.add(i));
 
 						}
@@ -288,10 +304,19 @@ public class AdminService {
 						}
 					}
 				}
+				// update Publisher
+				if (book.getPublisher() != null) {
+					if (book.getPublisher().getPublisherId() != null) { // choose exist one
+						bdao.updateBookPublisher(book.getPublisher().getPublisherId(), book.getBookId());
+					} else { // add new
+						bdao.updateBookPublisher(pdao.add(book.getPublisher()), book.getBookId());
+					}
+				}
 			}
 			return "Edition successful";
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 			return "Edition fail";
 		}
 	}
