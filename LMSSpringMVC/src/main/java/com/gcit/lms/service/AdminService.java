@@ -345,10 +345,11 @@ public class AdminService {
 
 	// read book loans
 	@RequestMapping(value = "/adminReadBookLoans", method = RequestMethod.GET, produces = "application/json")
-	public List<BookLoans> readBookLoans(@RequestParam(value = "CardNo", required = false) Integer cardNo,
+	public List<BookLoans> readBookLoans(
+			@RequestParam(value = "CardNo", required = false) Integer cardNo,
 			@RequestParam(value = "BookId", required = false) Integer bookId,
 			@RequestParam(value = "BranchId", required = false) Integer branchId,
-			@RequestParam(value = "mode", required = false) Integer mode) {
+			@RequestParam(value = "mode") Integer mode) {
 		try {
 			if (mode == 1) { // read book loans of same borrower
 
@@ -378,9 +379,24 @@ public class AdminService {
 					i.setBranch(lbdao.readLibraryBranchById(i.getBranchId()));
 				}
 				return bookLoansList;
-			} else { // mode = 4, read book loan of a book that was borrowed by same person at same
+			} else if(mode == 4) { // mode = 4, read book loan of a book that was borrowed by same person at same
 						// branch
-				return bldao.readRepeatedBookLoans(bookId, branchId, cardNo);
+				List<BookLoans> bookLoansList = bldao.readRepeatedBookLoans(bookId, branchId, cardNo);
+				for (BookLoans i : bookLoansList) {
+					i.setBook(bdao.readBookByBookId(i.getBookId()));
+					i.setBorrower(bordao.selectBorrowerByID(i.getCardNo()));
+					i.setBranch(lbdao.readLibraryBranchById(i.getBranchId()));
+				}
+				return bookLoansList;
+				
+			} else { // read all bookLoans
+				List<BookLoans> bookLoansList = bldao.readAll();
+				for (BookLoans i : bookLoansList) {
+					i.setBook(bdao.readBookByBookId(i.getBookId()));
+					i.setBorrower(bordao.selectBorrowerByID(i.getCardNo()));
+					i.setBranch(lbdao.readLibraryBranchById(i.getBranchId()));
+				}
+				return bookLoansList;
 			}
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
