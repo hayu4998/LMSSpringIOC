@@ -246,7 +246,7 @@ public class AdminService {
 		}
 		return null;
 	}
-	//testing
+	
 	@RequestMapping(value = "/editBook", method = RequestMethod.POST, consumes = "application/json")
 	public String editBook(@RequestBody Book book) {
 		try {
@@ -351,13 +351,14 @@ public class AdminService {
 			return "Edition fail";
 		}
 	}
-
+	
+	
 	// read book loans
 	@RequestMapping(value = "/adminReadBookLoans", method = RequestMethod.GET, produces = "application/json")
 	public List<BookLoans> readBookLoans(
-			@RequestParam(value = "CardNo", required = false) Integer cardNo,
-			@RequestParam(value = "BookId", required = false) Integer bookId,
-			@RequestParam(value = "BranchId", required = false) Integer branchId,
+			@RequestParam(value = "cardNo", required = false) Integer cardNo,
+			@RequestParam(value = "bookId", required = false) Integer bookId,
+			@RequestParam(value = "branchId", required = false) Integer branchId,
 			@RequestParam(value = "mode") Integer mode) {
 		try {
 			if (mode == 1) { // read book loans of same borrower
@@ -415,10 +416,10 @@ public class AdminService {
 		return null;
 	}
 
-	@RequestMapping(value = "/extendBookLoans", method = RequestMethod.POST, consumes = "application/json")
+	@RequestMapping(value = "/adminExtendBookLoans", method = RequestMethod.POST, consumes = "application/json")
 	public String extendBookLoansDueDate(@RequestBody BookLoans bookLoans) {
 		try {
-			bldao.update(bookLoans, "dateOut");
+			bldao.update(bookLoans, "dueDate");
 			return "Extend successful";
 		} catch (Exception e) {
 			e.printStackTrace();
