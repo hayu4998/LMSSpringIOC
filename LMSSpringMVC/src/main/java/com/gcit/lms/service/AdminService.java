@@ -108,7 +108,7 @@ public class AdminService {
 		}
 		return authors;
 	}
-
+	
 	@RequestMapping(value = "/editAuthor", method = RequestMethod.POST, consumes = "application/json")
 	public String saveAuthor(@RequestBody Author author) {
 		try {
@@ -160,7 +160,7 @@ public class AdminService {
 		}
 		return genreList;
 	}
-
+	
 	@RequestMapping(value = "/editGenre", method = RequestMethod.POST, consumes = "application/json")
 	public String editGenre(@RequestBody Genre genre) {
 		try {
@@ -246,13 +246,13 @@ public class AdminService {
 		}
 		return null;
 	}
-
+	//testing
 	@RequestMapping(value = "/editBook", method = RequestMethod.POST, consumes = "application/json")
 	public String editBook(@RequestBody Book book) {
 		try {
 			if (book.getBookId() == null) { // add book
 
-				// update Publisher
+				// fix Publisher
 				if(book.getPublisher() != null) {
 					if (book.getPublisher().getPublisherId() == null) {
 						// add new if not exist
@@ -299,14 +299,29 @@ public class AdminService {
 				bdao.delete(book);
 
 			} else { // update book
-				// update book title
+				
+				// fix Publisher
+				if(book.getPublisher() != null) {
+					if (book.getPublisher().getPublisherId() == null) {
+						// add new if not exist
+						Publisher publisher = book.getPublisher();
+						publisher.setPublisherId(pdao.add(book.getPublisher()));
+						book.setPublisher(publisher);
+					}
+				}else {
+					Publisher publisher = new Publisher();
+					publisher.setPublisherId(null);
+					book.setPublisher(publisher);
+				}
+				// update book title, publisher
 				bdao.update(book);
 				// update author
 				if (book.getAuthors() != null) {
-					// delete all exist ones
-					bdao.deleteAllBookAuthor(book.getBookId());
+					
 					for (Author i : book.getAuthors()) {
-						if (i.getAuthorId() != null) { // add exist one
+						if (i.getAuthorId() != null && i.getAuthorName() == null) {//delete the author
+							bdao.deleteBookAuthor(book.getBookId(), i.getAuthorId());
+						}else if (i.getAuthorId() != null) { // add exist one
 							bdao.addBookAuthors(book.getBookId(), i.getAuthorId());
 						} else { // new author
 							bdao.addBookAuthors(book.getBookId(), adao.add(i));
@@ -315,28 +330,22 @@ public class AdminService {
 				}
 				// update Genre
 				if (book.getGenres() != null) {
-					// delete all exist ones
-					bdao.deleteAllBookGenre(book.getBookId());
+					
 					for (Genre i : book.getGenres()) {
-						if (i.getGenreId() != null) { // add exist one
+						if(i.getGenreId()!=null && i.getGenreName() == null) { //delete the genre
+							bdao.deleteBookGenre(book.getBookId(), i.getGenreId());
+						}
+						else if (i.getGenreId() != null) { // add exist one
 							bdao.addBookGenres(book.getBookId(), i.getGenreId());
 						} else { // add new genre
 							bdao.addBookGenres(book.getBookId(), gdao.add(i));
 						}
 					}
 				}
-				// update Publisher
-				if (book.getPublisher() != null) {
-					if (book.getPublisher().getPublisherId() != null) { // choose exist one
-						bdao.updateBookPublisher(book.getPublisher().getPublisherId(), book.getBookId());
-					} else { // add new
-						bdao.updateBookPublisher(pdao.add(book.getPublisher()), book.getBookId());
-					}
-				}
 			}
 			return "Edition successful";
 		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			//TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			
 			return "Edition fail";

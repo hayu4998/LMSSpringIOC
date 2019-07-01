@@ -138,12 +138,12 @@ public class BookDAO extends BaseDAO<Book> implements ResultSetExtractor<List<Bo
 	}
 
 	public void deleteAllBookAuthor(Integer bookId) {
-		mysqlTemplate.update("delete from tbl_book_authors where bookId = ?", new Object[] { bookId }, this);
+		mysqlTemplate.update("delete from tbl_book_authors where bookId = ? and authorId = authorId", new Object[] { bookId }, this);
 
 	}
 
 	public void deleteAllBookGenre(Integer bookId) {
-		mysqlTemplate.update("delete from tbl_book_genres where bookId = ?", new Object[] { bookId }, this);
+		mysqlTemplate.update("delete from tbl_book_genres where bookId = ? and genre_id = genre_id", new Object[] { bookId }, this);
 
 	}
 
