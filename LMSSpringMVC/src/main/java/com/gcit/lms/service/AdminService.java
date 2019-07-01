@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +29,7 @@ import com.gcit.lms.entity.LibraryBranch;
 import com.gcit.lms.entity.Publisher;
 
 @RestController
-@Transactional(rollbackFor=Exception.class)
+
 public class AdminService {
 
 	@Autowired
@@ -77,14 +78,22 @@ public class AdminService {
 //		}
 //		return null;
 //	}
-
-	@RequestMapping(value = "/readAuthors", method = RequestMethod.GET, produces = "application/json")
-	public List<Author> readAuthorsByName(@RequestParam(value = "authorName", required = false) String authorName) {
+	
+	@RequestMapping(value = "/readAuthor", method = RequestMethod.GET, produces = "application/json")
+	public List<Author> readAuthorsByName(
+			@RequestParam(value = "authorName", required = false) String authorName,
+			@RequestParam(value = "authorId", required = false) Integer authorId
+			) 
+	{
 		List<Author> authors = new ArrayList<Author>();
 		// System.out.println("Author: " + authorName);
 		try {
-			if (authorName != null) {// read author w/ name like authorName
+			if(authorId != null) { // read author by authorId
+				authors = adao.readAuthorById(authorId);
+				
+			}else if (authorName != null) {// read author w/ name like authorName
 				authors = adao.readAuthorsByNameLike(authorName);
+				
 			} else { // read all authors
 				authors = adao.readAll();
 			}
@@ -94,6 +103,7 @@ public class AdminService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			System.out.println("Something went wrong. Failed to get all authors");
 		}
 		return authors;
@@ -117,6 +127,7 @@ public class AdminService {
 			}
 			return "Author added successfully";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			return "Author add failed";
 		}
@@ -137,6 +148,7 @@ public class AdminService {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			System.out.println("Fail to read Genre");
 		}
 		return genreList;
@@ -160,6 +172,7 @@ public class AdminService {
 			}
 			return "Operation successful";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			return "Edition action failed";
 		}
@@ -219,6 +232,7 @@ public class AdminService {
 			return books;
 
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			System.out.println("Read Book Operation fail");
 
@@ -315,6 +329,7 @@ public class AdminService {
 			}
 			return "Edition successful";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			
 			return "Edition fail";
@@ -361,6 +376,7 @@ public class AdminService {
 				return bldao.readRepeatedBookLoans(bookId, branchId, cardNo);
 			}
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			System.out.println("read book loans fail");
 		}
@@ -403,6 +419,7 @@ public class AdminService {
 				}
 			}
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 		}
 		return null;
@@ -420,6 +437,7 @@ public class AdminService {
 			}
 			return "edit borrower successful";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			return "edit borrower failed";
 		}
@@ -446,6 +464,7 @@ public class AdminService {
 				return lbList;
 			}
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 		}
 		return null;
@@ -463,6 +482,7 @@ public class AdminService {
 			}
 			return "edition to library branch successful";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			return "edition to library branch fail";
 		}
@@ -486,6 +506,7 @@ public class AdminService {
 				return pubList;
 			}
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			return null;
 		}

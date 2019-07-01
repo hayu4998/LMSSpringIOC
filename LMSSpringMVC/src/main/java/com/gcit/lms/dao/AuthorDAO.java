@@ -72,4 +72,8 @@ public class AuthorDAO extends BaseDAO<Author> implements ResultSetExtractor<Lis
 		}
 		return authors;
 	}
+
+	public List<Author> readAuthorById(Integer authorId) {
+		return mysqlTemplate.query("select * from tbl_author where authorId = ?", new Object[] {authorId},this);
+	}
 }
