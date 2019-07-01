@@ -3,7 +3,6 @@ package com.gcit.lms;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.gcit.lms.dao.AuthorDAO;
@@ -14,7 +13,6 @@ import com.gcit.lms.dao.BorrowerDAO;
 import com.gcit.lms.dao.GenreDAO;
 import com.gcit.lms.dao.LibraryBranchDAO;
 import com.gcit.lms.dao.PublisherDAO;
-import com.gcit.lms.entity.Author;
 
 @Configuration 
 public class LMSConfig {
