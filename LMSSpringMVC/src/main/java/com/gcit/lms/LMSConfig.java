@@ -1,35 +1,31 @@
-/**
- * 
- */
 package com.gcit.lms;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import com.gcit.lms.dao.AuthorDAO;
+import com.gcit.lms.dao.BookCopiesDAO;
 import com.gcit.lms.dao.BookDAO;
-import com.gcit.lms.service.AdminService;
+import com.gcit.lms.dao.BookLoansDAO;
+import com.gcit.lms.dao.BorrowerDAO;
+import com.gcit.lms.dao.GenreDAO;
+import com.gcit.lms.dao.LibraryBranchDAO;
+import com.gcit.lms.dao.PublisherDAO;
+import com.gcit.lms.entity.Author;
 
-/**
- * @author ppradhan
- *
- */
-@Configuration
+@Configuration 
 public class LMSConfig {
 	
 	public String driverName = "com.mysql.cj.jdbc.Driver";
 	public String url = "jdbc:mysql://localhost:3306/library?useSSL=true";
 	public String username = "root";
-	public String password = "root";
-	
+	public String password = "Yh19930718";
 	
 	@Bean
-//	@Scope(value="prototype")
-	public BasicDataSource mysqlDataSource(){
+	public BasicDataSource mysqlDataSource() {
 		BasicDataSource ds = new BasicDataSource();
 		ds.setDriverClassName(driverName);
 		ds.setUrl(url);
@@ -37,48 +33,50 @@ public class LMSConfig {
 		ds.setPassword(password);
 		return ds;
 	}
-
+	
 	@Bean
-	@Qualifier(value="mysqlTemplate")
-	public JdbcTemplate mysqlTemplate(){
+	public JdbcTemplate mysqlTemplate() {
 		return new JdbcTemplate(mysqlDataSource());
 	}
 	
 	@Bean
-//	@Scope(value="prototype")
-	public BasicDataSource oracleDataSource(){
-		BasicDataSource ds = new BasicDataSource();
-		ds.setDriverClassName(driverName);
-		ds.setUrl(url);
-		ds.setUsername(username);
-		ds.setPassword(password);
-		return ds;
-	}
-
-	@Bean
-	@Qualifier(value="oracleTemplate")
-	public JdbcTemplate oracleTemplate(){
-		return new JdbcTemplate(oracleDataSource());
-	}
-	
-	@Bean
-	public BookDAO bdao(){
+	public BookDAO bdao() {
 		return new BookDAO();
 	}
 	
 	@Bean
-	public AuthorDAO adao(){
+	public AuthorDAO adao() {
 		return new AuthorDAO();
 	}
 	
 	@Bean
-	public AdminService adminService(){
-		return new AdminService();
+	public BookCopiesDAO bcdao() {
+		return new BookCopiesDAO();
 	}
-	//all daos
 	
 	@Bean
-	DataSourceTransactionManager txManager(){
-		return new DataSourceTransactionManager(mysqlDataSource());
+	public BookLoansDAO bldao() {
+		return new BookLoansDAO();
 	}
+	
+	@Bean
+	public GenreDAO gdao() {
+		return new GenreDAO();
+	}
+	
+	@Bean
+	public LibraryBranchDAO lbdao() {
+		return new LibraryBranchDAO();
+	}
+	
+	@Bean
+	public PublisherDAO pdao() {
+		return new PublisherDAO();
+	}
+	
+	@Bean
+	public BorrowerDAO bordao() {
+		return new BorrowerDAO();
+	}
+	
 }

@@ -21,7 +21,7 @@ public class AdminController {
 	
 	@RequestMapping(value = "/admin", method = RequestMethod.GET)
 	public String lmsHome(Locale locale, Model model) {
-//		model.addAttribute("sizeofauthors", adminService.readAuthors().size());
+		model.addAttribute("sizeofauthors", adminService.readAuthorsByName(null).size());
 		return "lmsadmin";
 	}
 	

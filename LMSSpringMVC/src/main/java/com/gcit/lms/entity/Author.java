@@ -5,15 +5,14 @@ package com.gcit.lms.entity;
 
 import java.util.List;
 
-/**
- * @author ppradhan
- *
- */
-public class Author {
+
+public class Author{
 	
 	private Integer authorId;
 	private String authorName;
 	private List<Book> books;
+	
+	
 	/**
 	 * @return the authorId
 	 */

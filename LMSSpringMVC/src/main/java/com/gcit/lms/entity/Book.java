@@ -5,17 +5,29 @@ package com.gcit.lms.entity;
 
 import java.util.List;
 
-/**
- * over ride hascode/equals for all Entity Objects
- * @author ppradhan
- *
- */
-public class Book {
+
+public class Book{
+	
 	private Integer bookId;
 	private String title;
-	private List<Author> authors;
 	private Publisher publisher;
+	private List<Author> authors;
 	private List<Genre> genres;
+	private List<BookCopies> bookCopies;
+	private List<BookLoans> bookLoans; 
+	
+	/**
+	 * @return the bookCopies
+	 */
+	public List<BookCopies> getBookCopies() {
+		return bookCopies;
+	}
+	/**
+	 * @param bookCopies the bookCopies to set
+	 */
+	public void setBookCopies(List<BookCopies> bookCopies) {
+		this.bookCopies = bookCopies;
+	}
 	/**
 	 * @return the bookId
 	 */
@@ -76,4 +88,18 @@ public class Book {
 	public void setGenres(List<Genre> genres) {
 		this.genres = genres;
 	}
+	/**
+	 * @return the bookLoans
+	 */
+	public List<BookLoans> getBookLoans() {
+		return bookLoans;
+	}
+	/**
+	 * @param bookLoans the bookLoans to set
+	 */
+	public void setBookLoans(List<BookLoans> bookLoans) {
+		this.bookLoans = bookLoans;
+	}
+
+	
 }
