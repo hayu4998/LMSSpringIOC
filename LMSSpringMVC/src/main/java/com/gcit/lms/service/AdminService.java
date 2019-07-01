@@ -526,7 +526,7 @@ public class AdminService {
 			return "edition to library branch fail";
 		}
 	}
-	//testing
+	
 	@RequestMapping(value = "/readPublisher", method = RequestMethod.GET, produces = "application/json")
 	public List<Publisher> readPublisher(@RequestParam(value = "publisherId",required = false) Integer publisherId) {
 		try {
