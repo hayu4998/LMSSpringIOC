@@ -148,7 +148,7 @@ public class BookDAO extends BaseDAO<Book> implements ResultSetExtractor<List<Bo
 	}
 
 	public List<Book> readBookByBranchId(Integer branchId) {
-		return mysqlTemplate.query("select * from tbl_book where bookId in(select bookId from tbl_book_copies where branchId = ? and dateIn = null)", new Object[] {branchId}, this);
+		return mysqlTemplate.query("select * from tbl_book where bookId in(select bookId from tbl_book_copies where branchId = ? and dateIn is null)", new Object[] {branchId}, this);
 	}
 
 	public void updateBookPublisher(Integer pubId, Integer bookId) {
