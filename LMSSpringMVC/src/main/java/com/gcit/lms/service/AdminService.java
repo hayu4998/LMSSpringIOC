@@ -103,7 +103,7 @@ public class AdminService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			//TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			System.out.println("Something went wrong. Failed to get all authors");
 		}
 		return authors;
@@ -127,7 +127,7 @@ public class AdminService {
 			}
 			return "Author added successfully";
 		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			//TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			return "Author add failed";
 		}
@@ -155,7 +155,7 @@ public class AdminService {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			//TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			System.out.println("Fail to read Genre");
 		}
 		return genreList;
@@ -179,7 +179,7 @@ public class AdminService {
 			}
 			return "Operation successful";
 		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			//TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			return "Edition action failed";
 		}
@@ -239,7 +239,7 @@ public class AdminService {
 			return books;
 
 		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			//TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			System.out.println("Read Book Operation fail");
 
@@ -409,7 +409,7 @@ public class AdminService {
 				return bookLoansList;
 			}
 		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			//TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			System.out.println("read book loans fail");
 		}
@@ -503,7 +503,7 @@ public class AdminService {
 				return lbList;
 			}
 		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			//TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 		}
 		return null;
@@ -545,7 +545,7 @@ public class AdminService {
 				return pubList;
 			}
 		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			//TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 			return null;
 		}
