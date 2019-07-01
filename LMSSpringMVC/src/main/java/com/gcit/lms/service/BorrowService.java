@@ -51,8 +51,12 @@ public class BorrowService {
 	LibraryBranchDAO lbdao;
 
 	@RequestMapping(value = "/checkoutBook", method = RequestMethod.GET)
-	public String checkoutBook(@RequestParam(value = "bookId") Integer bookId,
-			@RequestParam(value = "branchId") Integer branchId, @RequestParam(value = "cardNo") Integer cardNo) {
+	public String checkoutBook(
+			@RequestParam(value = "bookId") Integer bookId,
+			@RequestParam(value = "branchId") Integer branchId, 
+			@RequestParam(value = "cardNo") Integer cardNo
+			) 
+	{
 		try {
 			if(bcdao.readBookCopiesByBookIdBranchId(bookId, branchId).get(0).getNoOfCopies()>0) {
 				//checkout book
@@ -95,7 +99,7 @@ public class BorrowService {
 
 	// read book loans
 	@RequestMapping(value = "/borrowerReadBookLoans", method = RequestMethod.GET, produces = "application/json")
-	public List<BookLoans> readBookLoans(@RequestParam(value = "CardNo", required = false) Integer cardNo) {
+	public List<BookLoans> readBookLoans(@RequestParam(value = "cardNo") Integer cardNo) {
 		try {
 			// read book loans of same borrower
 
@@ -118,6 +122,9 @@ public class BorrowService {
 	@RequestMapping(value = "/returnBook", method = RequestMethod.POST, consumes = "application/json")
 	public String returnBook(@RequestBody BookLoans bookLoans) {
 		try {
+			//update bookcopies record
+			bcdao.borrowReturnFunction("+", bookLoans.getBookId(), bookLoans.getBranchId());
+			//update bookloans record
 			bldao.update(bookLoans, "dateIn");
 			return "return book operation successful";
 		}catch(Exception e) {

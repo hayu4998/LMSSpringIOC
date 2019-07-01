@@ -39,8 +39,10 @@ public class BookLoansDAO extends BaseDAO<BookLoans> implements ResultSetExtract
 			sql = "update tbl_book_loans set dateIn = now() where bookId =? and branchId = ? and CardNo = ? and dateOut = ? ";
 			fieldlist = new Object[] {
 
-					bookLoans.getBook().getBookId(), bookLoans.getBranch().getLibraryBranchId(),
-					bookLoans.getBorrower().getCardId(), bookLoans.getLoanedDateOut() };
+					bookLoans.getBook().getBookId(), 
+					bookLoans.getBranch().getLibraryBranchId(),
+					bookLoans.getBorrower().getCardId(), 
+					bookLoans.getLoanedDateOut() };
 		} else if (field.contentEquals("dueDate")) {
 			sql = "update tbl_book_loans set dueDate = dueDate + interval 7 day where bookId = ? and branchId = ? and CardNo = ? and dateOut = ?";
 			fieldlist = new Object[] { bookLoans.getBook().getBookId(), bookLoans.getBranch().getLibraryBranchId(),
