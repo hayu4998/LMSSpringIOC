@@ -15,9 +15,9 @@ import com.gcit.lms.entity.BookLoans;
  */
 public class BookLoansDAO extends BaseDAO<BookLoans> implements ResultSetExtractor<List<BookLoans>> {
 
-	public Integer add(BookLoans bookloan) throws ClassNotFoundException, SQLException {
+	public void add(BookLoans bookloan) throws ClassNotFoundException, SQLException {
 
-		return mysqlTemplate.update(
+		mysqlTemplate.update(
 				"insert into tbl_book_loans (bookId, branchId, cardNo, dateOut, dueDate) values (?,?,?,now(),now() + interval 7 day)",
 				new Object[] { bookloan.getBook().getBookId(), bookloan.getBranch().getLibraryBranchId(),
 						bookloan.getBorrower().getCardId() });
