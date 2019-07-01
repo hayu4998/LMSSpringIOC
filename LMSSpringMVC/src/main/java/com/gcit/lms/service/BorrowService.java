@@ -54,8 +54,15 @@ public class BorrowService {
 	public String checkoutBook(@RequestParam(value = "bookId") Integer bookId,
 			@RequestParam(value = "branchId") Integer branchId, @RequestParam(value = "cardNo") Integer cardNo) {
 		try {
-			bldao.borrowBook(new Object[] { bookId, branchId, cardNo });
-			return "checkout successful";
+			if(bcdao.readBookCopiesByBookIdBranchId(bookId, branchId).get(0).getNoOfCopies()>0) {
+				//checkout book
+				bcdao.borrowReturnFunction("-", bookId, branchId);
+				//add record
+				bldao.borrowBook(new Object[] { bookId, branchId, cardNo });
+				return "checkout successful";
+			}else {
+				return "no copy left for that book, checkout failed";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "Checkout fail";
