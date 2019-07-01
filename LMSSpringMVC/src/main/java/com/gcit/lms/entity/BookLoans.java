@@ -1,9 +1,5 @@
 package com.gcit.lms.entity;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-
 public class BookLoans{
 	private Book book;
 	private LibraryBranch branch;
@@ -105,20 +101,5 @@ public class BookLoans{
 	 */
 	public void setLoanedDueDate(String loanedDueDate) {
 		this.loanedDueDate = loanedDueDate;
-	}
-	
-	public Timestamp getNOW() {
-		Date d = new Date();
-		long time = d.getTime();
-		Timestamp t = new Timestamp(time);
-		return t;
-	}
-	
-	public Timestamp getSevenDayLater() {
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DAY_OF_YEAR, 7);
-		long time = cal.getTimeInMillis();
-		Timestamp t = new Timestamp(time);
-		return t;
 	}
 }
