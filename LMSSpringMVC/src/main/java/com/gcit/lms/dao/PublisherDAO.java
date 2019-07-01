@@ -37,7 +37,8 @@ public class PublisherDAO extends BaseDAO<Publisher> implements ResultSetExtract
 				new Object[]{
 						publisher.getPublisherName(),
 						publisher.getPublisherAddress(),
-						publisher.getPublisherPhone()
+						publisher.getPublisherPhone(),
+						publisher.getPublisherId()
 				}
 		);
 	}
