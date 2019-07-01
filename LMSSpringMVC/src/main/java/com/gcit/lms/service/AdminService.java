@@ -426,7 +426,7 @@ public class AdminService {
 			return "Extend fail";
 		}
 	}
-
+	
 	@RequestMapping(value = "/readBorrower", method = RequestMethod.GET, produces = "application/json")
 	public List<Borrower> readBorrowers(
 			@RequestParam(value = "cardNo", required = false) Integer cardNo,
@@ -462,7 +462,8 @@ public class AdminService {
 		}
 		return null;
 	}
-
+	
+	
 	@RequestMapping(value = "/editBorrower", method = RequestMethod.POST, consumes = "application/json")
 	public String editBorrower(@RequestBody Borrower borrower) {
 		try {
@@ -480,7 +481,7 @@ public class AdminService {
 			return "edit borrower failed";
 		}
 	}
-
+	
 	@RequestMapping(value = "/readLibraryBranch", method = RequestMethod.GET, produces = "application/json")
 	public List<LibraryBranch> readLibraryBranch(@RequestParam(value = "branchId", required = false) Integer branchId) {
 
@@ -507,13 +508,13 @@ public class AdminService {
 		}
 		return null;
 	}
-
+	//testing
 	@RequestMapping(value = "/editLibraryBranch", method = RequestMethod.POST, consumes = "application/json")
 	public String editLibraryBranch(@RequestBody LibraryBranch libraryBranch) {
 		try {
 			if (libraryBranch.getLibraryBranchId() == null) { // add new library branch
 				lbdao.add(libraryBranch);
-			} else if (libraryBranch.getLibraryBranchAddress() != null) {// update library branch
+			} else if (libraryBranch.getLibraryBranchName() != null) {// update library branch
 				lbdao.update(libraryBranch);
 			} else { // delete library branch
 				lbdao.delete(libraryBranch);

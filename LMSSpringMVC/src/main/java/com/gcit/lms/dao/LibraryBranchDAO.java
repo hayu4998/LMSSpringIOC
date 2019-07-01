@@ -38,7 +38,7 @@ public class LibraryBranchDAO extends BaseDAO<LibraryBranch> implements ResultSe
 
 	public void update(LibraryBranch branch) throws ClassNotFoundException, SQLException {
 		mysqlTemplate.update(
-				"update tbl_library_branch set branchName = ?, LibraryAddress = ? where branchId = ?", 
+				"update tbl_library_branch set branchName = ?, branchAddress = ? where branchId = ?", 
 				new Object[] {
 						branch.getLibraryBranchName(),
 						branch.getLibraryBranchAddress(),
